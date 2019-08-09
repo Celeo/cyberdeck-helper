@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:cyberdeck_helper/main_components.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,13 +38,16 @@ class HomePageState extends State<HomePage> {
 
   void _afterInitState() async {
     final prefs = await SharedPreferences.getInstance();
-    var config = CharacterConfig.starting();
-    config.logic = prefs.getInt('logic') ?? 1;
-    config.willpower = prefs.getInt('willpower') ?? 1;
-    config.deck = prefs.getString('deck');
-    config.jack = prefs.getString('jack');
+    var charConfig = CharacterConfig.starting();
+    charConfig.logic = prefs.getInt('logic') ?? 1;
+    charConfig.willpower = prefs.getInt('willpower') ?? 1;
+    charConfig.deck = prefs.getString('deck');
+    charConfig.jack = prefs.getString('jack');
+    var sitConfig = SituationConfig.starting();
+    sitConfig.runningPrograms = prefs.getStringList('programs') ?? [];
     setState(() {
-      character = config;
+      character = charConfig;
+      situation = sitConfig;
     });
   }
 
@@ -55,11 +57,12 @@ class HomePageState extends State<HomePage> {
     prefs.setInt('willpower', character.willpower);
     prefs.setString('deck', character.deck);
     prefs.setString('jack', character.jack);
+    prefs.setStringList('programs', situation.runningPrograms);
   }
 
   @override
   Widget build(BuildContext context) {
-    final asdf = validASDF();
+    final asdf = getValidASDF();
     return Scaffold(
       appBar: AppBar(
         title: Text(appName),
@@ -151,74 +154,62 @@ class HomePageState extends State<HomePage> {
               ],
             ),
             Divider(),
+            buildASDFDisplayRow(setState, situation, asdf),
+            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                _buildASDFSelector(ASDF.Attack, asdf),
-                _buildASDFSelector(ASDF.Sleaze, asdf),
-                _buildASDFSelector(ASDF.DataProcessing, asdf),
-                _buildASDFSelector(ASDF.Firewall, asdf),
+                Column(
+                  children: <Widget>[
+                    Container(
+                      width: 100,
+                      child: TextField(
+                        decoration: InputDecoration(labelText: 'Noise'),
+                        controller: TextEditingController(
+                            text: situation.noise.toString() ?? '0'),
+                        keyboardType: TextInputType.number,
+                        onChanged: (val) {
+                          if (val != null) {
+                            setState(() {
+                              situation.noise = int.parse(val);
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Text('Matrix mode',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    DropdownButton<MatrixMode>(
+                      value: situation.mode ?? MatrixMode.AR,
+                      onChanged: (val) {
+                        if (val != null) {
+                          setState(() {
+                            situation.mode = val;
+                          });
+                        }
+                      },
+                      items: MatrixMode.values
+                          .map((e) => DropdownMenuItem<MatrixMode>(
+                                value: e,
+                                child: Text(e.toString().split('.')[1]),
+                              ))
+                          .toList(),
+                    )
+                  ],
+                ),
               ],
             ),
-            Divider(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildASDFSelector(ASDF attribute, List<int> values) {
-    var currentValue;
-    switch (attribute) {
-      case ASDF.Attack:
-        currentValue = situation.attack;
-        break;
-      case ASDF.Sleaze:
-        currentValue = situation.sleaze;
-        break;
-      case ASDF.DataProcessing:
-        currentValue = situation.dataProcessing;
-        break;
-      case ASDF.Firewall:
-        currentValue = situation.firewall;
-        break;
-    }
-    return Column(
-      children: <Widget>[
-        Text(attribute.toString().split('.')[1],
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        DropdownButton<int>(
-          value: values.contains(currentValue) ? currentValue : 0,
-          onChanged: (val) {
-            if (val != null) {
-              setState(() {
-                switch (attribute) {
-                  case ASDF.Attack:
-                    situation.attack = val;
-                    break;
-                  case ASDF.Sleaze:
-                    situation.sleaze = val;
-                    break;
-                  case ASDF.DataProcessing:
-                    situation.dataProcessing = val;
-                    break;
-                  case ASDF.Firewall:
-                    situation.firewall = val;
-                    break;
-                }
-              });
-            }
-          },
-          items: values
-              .map((e) =>
-                  DropdownMenuItem<int>(value: e, child: Text(e.toString())))
-              .toList(),
-        ),
-      ],
-    );
-  }
-
-  List<int> validASDF() {
+  List<int> getValidASDF() {
     Set<int> values = Set.from([0]);
     if (character.deck != null) {
       final parts = character.deck

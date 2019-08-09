@@ -10,9 +10,25 @@ class _ProgramViewConfigurationState extends State<ProgramViewConfiguration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Programs')),
-      body: Container(
-          // TODO
-          ),
+      body: ListView.builder(
+        itemCount: allPrograms.length,
+        itemBuilder: (context, index) => ListTile(
+          title: Text(allPrograms[index]),
+          trailing: Icon(situation.runningPrograms.contains(allPrograms[index])
+              ? Icons.check
+              : null),
+          onTap: () {
+            setState(() {
+              final name = allPrograms[index];
+              if (situation.runningPrograms.contains(name)) {
+                situation.runningPrograms.remove(name);
+              } else {
+                situation.runningPrograms.add(name);
+              }
+            });
+          },
+        ),
+      ),
     );
   }
 }

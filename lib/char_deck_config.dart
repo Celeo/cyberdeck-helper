@@ -66,13 +66,6 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
                 }
               },
             ),
-            RaisedButton(
-              child: Text('Close'),
-              color: Colors.green,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
           ],
         ),
       ),
