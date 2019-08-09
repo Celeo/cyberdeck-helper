@@ -9,7 +9,7 @@ class CharacterConfig {
   String deck;
   String jack;
 
-  CharacterConfig(int logic, int willpower);
+  CharacterConfig(int logic, int willpower, String deck, String jack);
 
   CharacterConfig.starting() {
     logic = 1;
