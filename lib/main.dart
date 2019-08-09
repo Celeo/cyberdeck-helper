@@ -23,7 +23,6 @@ class App extends StatelessWidget {
 enum _AppBarDropdownOptions {
   CharacterGear,
   Programs,
-  About,
 }
 
 class HomePageState extends State<HomePage> {
@@ -37,10 +36,23 @@ class HomePageState extends State<HomePage> {
   }
 
   void _afterInitState() async {
-    final config = await loadConfig();
+    final prefs = await SharedPreferences.getInstance();
+    var config = CharacterConfig.starting();
+    config.logic = prefs.getInt('logic') ?? 1;
+    config.willpower = prefs.getInt('willpower') ?? 1;
+    config.deck = prefs.getString('deck');
+    config.jack = prefs.getString('jack');
     setState(() {
       character = config;
     });
+  }
+
+  void saveConfig() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt('logic', character.logic);
+    prefs.setInt('willpower', character.willpower);
+    prefs.setString('deck', character.deck);
+    prefs.setString('jack', character.jack);
   }
 
   @override
@@ -72,8 +84,6 @@ class HomePageState extends State<HomePage> {
                   ),
                 );
                 saveConfig();
-              } else {
-                // ...
               }
             },
             itemBuilder: (context) {
@@ -86,11 +96,6 @@ class HomePageState extends State<HomePage> {
                   value: _AppBarDropdownOptions.Programs,
                   child: Text('Programs'),
                 ),
-                // PopupMenuDivider(),
-                // PopupMenuItem(
-                //   value: _AppBarDropdownOptions.About,
-                //   child: Text('About'),
-                // ),
               ];
             },
           ),
@@ -155,24 +160,6 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  void saveConfig() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setInt('logic', character.logic);
-    prefs.setInt('willpower', character.willpower);
-    prefs.setString('deck', character.deck);
-    prefs.setString('jack', character.jack);
-  }
-
-  Future<CharacterConfig> loadConfig() async {
-    final prefs = await SharedPreferences.getInstance();
-    var config = CharacterConfig.starting();
-    config.logic = prefs.getInt('logic');
-    config.willpower = prefs.getInt('willpower');
-    config.deck = prefs.getString('deck');
-    config.jack = prefs.getString('jack');
-    return config;
   }
 }
 

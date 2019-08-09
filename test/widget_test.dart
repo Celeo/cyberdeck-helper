@@ -28,3 +28,5 @@ void main() {
   //   expect(find.text('1'), findsOneWidget);
   // });
 }
+
+// https://flutter.dev/docs/cookbook/persistence/key-value#testing-support
