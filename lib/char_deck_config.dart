@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cyberdeck_helper/rules.dart';
 
+/// Enum for the two types of contributing gear.
 enum _DeckOrJack {
   Deck,
   Jack,
@@ -72,6 +73,8 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
     );
   }
 
+  /// Builds and returns a widget for selecting gear and setting the
+  /// value in the app's memory.
   Widget _buildDropDown(CharacterConfig character, String defaultSelection,
       _DeckOrJack key, List<String> options) {
     var val;
