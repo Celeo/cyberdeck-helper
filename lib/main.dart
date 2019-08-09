@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,6 +59,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final asdf = validASDF();
     return Scaffold(
       appBar: AppBar(
         title: Text(appName),
@@ -103,7 +106,6 @@ class HomePageState extends State<HomePage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -152,14 +154,91 @@ class HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Text('Foobar'),
-                // ...
+                _buildASDFSelector(ASDF.Attack, asdf),
+                _buildASDFSelector(ASDF.Sleaze, asdf),
+                _buildASDFSelector(ASDF.DataProcessing, asdf),
+                _buildASDFSelector(ASDF.Firewall, asdf),
               ],
             ),
+            Divider(),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildASDFSelector(ASDF attribute, List<int> values) {
+    var currentValue;
+    switch (attribute) {
+      case ASDF.Attack:
+        currentValue = situation.attack;
+        break;
+      case ASDF.Sleaze:
+        currentValue = situation.sleaze;
+        break;
+      case ASDF.DataProcessing:
+        currentValue = situation.dataProcessing;
+        break;
+      case ASDF.Firewall:
+        currentValue = situation.firewall;
+        break;
+    }
+    return Column(
+      children: <Widget>[
+        Text(attribute.toString().split('.')[1],
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        DropdownButton<int>(
+          value: values.contains(currentValue) ? currentValue : 0,
+          onChanged: (val) {
+            if (val != null) {
+              setState(() {
+                switch (attribute) {
+                  case ASDF.Attack:
+                    situation.attack = val;
+                    break;
+                  case ASDF.Sleaze:
+                    situation.sleaze = val;
+                    break;
+                  case ASDF.DataProcessing:
+                    situation.dataProcessing = val;
+                    break;
+                  case ASDF.Firewall:
+                    situation.firewall = val;
+                    break;
+                }
+              });
+            }
+          },
+          items: values
+              .map((e) =>
+                  DropdownMenuItem<int>(value: e, child: Text(e.toString())))
+              .toList(),
+        ),
+      ],
+    );
+  }
+
+  List<int> validASDF() {
+    Set<int> values = Set.from([0]);
+    if (character.deck != null) {
+      final parts = character.deck
+          .split(': ')[1]
+          .split(' ')[1]
+          .replaceFirst(',', '')
+          .split('/');
+      values.add(int.parse(parts[0]));
+      values.add(int.parse(parts[1]));
+    }
+    if (character.jack != null) {
+      final parts = character.jack
+          .split(': ')[1]
+          .split(' ')[1]
+          .replaceFirst(',', '')
+          .split('/');
+      values.add(int.parse(parts[0]));
+      values.add(int.parse(parts[1]));
+    }
+    return List.from(values)..sort();
   }
 }
 

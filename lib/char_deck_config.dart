@@ -90,7 +90,7 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
     final allOptions = List.from(options)..insert(0, defaultSelection);
     return DropdownButton<String>(
       value: val,
-      onChanged: (String val) {
+      onChanged: (val) {
         if (val != defaultSelection) {
           setState(() {
             if (key == _DeckOrJack.Deck) {

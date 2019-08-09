@@ -20,17 +20,33 @@ class CharacterConfig {
 }
 
 class SituationConfig {
+  int attack;
+  int sleaze;
+  int dataProcessing;
+  int firewall;
   int noise;
   MatrixMode mode;
   List<String> runningPrograms;
 
-  SituationConfig(int noise, MatrixMode mode, List<String> runningPrograms);
+  SituationConfig(int attack, int sleaze, int dataProcessing, int firewall,
+      int noise, MatrixMode mode, List<String> runningPrograms);
 
   SituationConfig.starting() {
+    attack = 0;
+    sleaze = 0;
+    dataProcessing = 0;
+    firewall = 0;
     noise = 0;
     mode = MatrixMode.AR;
     runningPrograms = [];
   }
+}
+
+enum ASDF {
+  Attack,
+  Sleaze,
+  DataProcessing,
+  Firewall,
 }
 
 final List<String> basicPrograms = [
