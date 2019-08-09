@@ -1,6 +1,7 @@
+import 'package:cyberdeck_helper/program_config.dart';
 import 'package:flutter/material.dart';
 import 'package:cyberdeck_helper/rules.dart';
-import 'package:cyberdeck_helper/configuration.dart';
+import 'package:cyberdeck_helper/char_deck_config.dart';
 
 void main() => runApp(App());
 
@@ -29,21 +30,34 @@ class HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(character.deck == null ? 'No deck selected' : character.deck),
-            Text(character.jack == null ? 'No jack selected' : character.jack),
             RaisedButton(
-              child: Text('Configure'),
+              child: Text('Configure character/gear'),
+              color: Colors.green,
               onPressed: () async {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        ViewConfiguration(character: character),
+                        CharGearViewConfiguration(character: character),
                   ),
                 );
                 // TODO save selection
               },
             ),
+            RaisedButton(
+              child: Text('Configure Programs'),
+              color: Colors.green,
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ProgramViewConfiguration(situation: situation),
+                  ),
+                );
+                // TODO save selection
+              },
+            )
           ],
         ),
       ),
