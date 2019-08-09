@@ -223,26 +223,49 @@ class HomePageState extends State<HomePage> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('Cyberdeck',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(character.deck ?? 'not selected'),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('Cyberjack',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(character.jack ?? 'not selected'),
-                  ],
-                ),
-              ],
+            Padding(
+              padding: EdgeInsets.only(top: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Cyberdeck',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          character.deck ?? 'not selected',
+                          style: TextStyle(fontSize: 14.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text('Cyberjack',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          )),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          character.jack ?? 'not selected',
+                          style: TextStyle(fontSize: 14.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
             Divider(),
             Row(
@@ -252,16 +275,38 @@ class HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text('Logic',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(character.logic.toString()),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        )),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        character.logic.toString(),
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text('Willpower',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(character.willpower.toString()),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        )),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        character.willpower.toString(),
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],

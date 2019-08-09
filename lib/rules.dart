@@ -114,3 +114,8 @@ final List<String> allActions = [
   'Tarpit (illegal | major | any)',
   'Trace Icon (illegal | major | admin)',
 ];
+
+String getActionDescription(String action) {
+  // TODO
+  return 'Nothing here yet.';
+}

@@ -25,12 +25,12 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
           children: <Widget>[
             _buildDropDown(
                 character, _dropdownDefaultDeck, _DeckOrJack.Deck, <String>[
-              'Erika MCD-6: A/S 4/3, 2 slots',
-              'Spinrad Falcon: A/S 5/4, 4 slots',
-              'MCT 360: A/S 6/5 6 slots',
-              'Reraku Kitsune: A/S 7/6, 8 slots',
-              'Shiawase Cyber-6: A/S 8/7, 10 slots',
-              'Fairlight Excalibur: A/S 9/8, 12 slots',
+              'Rating 1: A/S 4/3, 2 slots',
+              'Rating 2: A/S 5/4, 4 slots',
+              'Rating 3: A/S 6/5 6 slots',
+              'Rating 4: A/S 7/6, 8 slots',
+              'Rating 5: A/S 8/7, 10 slots',
+              'Rating 6: A/S 9/8, 12 slots',
             ]),
             _buildDropDown(
                 character, _dropdownDefaultJack, _DeckOrJack.Jack, <String>[

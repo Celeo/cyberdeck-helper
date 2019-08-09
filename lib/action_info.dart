@@ -14,7 +14,10 @@ class ViewActionInfo extends StatelessWidget {
       ),
       body: Container(
         padding: EdgeInsets.all(50.0),
-        child: Text('TODO'),
+        child: Text(
+          getActionDescription(actionName),
+          style: TextStyle(fontSize: 16.0),
+        ),
       ),
     );
   }
