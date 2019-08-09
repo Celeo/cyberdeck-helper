@@ -1,6 +1,6 @@
 # cyberdeck_helper
 
-A new Flutter project.
+Helper app for SR6 cyberdeck usage.
 
 ## Getting Started
 
