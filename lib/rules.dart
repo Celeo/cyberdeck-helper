@@ -80,39 +80,102 @@ final List<String> allPrograms = [
   'Trace',
 ];
 
-final List<String> allActions = [
-  'Backdoor Entry (illegal | major | outsider)',
-  'Brute Force (illegal | major | any)',
-  'Change Icon (legal | minor | user/admin)',
-  'Check OS (illegal | major | admin)',
-  'Control Device (legal | major | user/admin)',
-  'Crack File (illegal | major | user/admin)',
-  'Crash Program (illegal | major | admin)',
-  'Data spike (illegal | major | any)',
-  'Disarm data bomb (legal | major | user/admin)',
-  'Edit file (legal | major | user/admin)',
-  'Encrypt File (legal | major | user/admin)',
-  'Enter/exit Host (legal | minor | depends)',
-  'Erase Matrix Signature (illegal | major | user/admin)',
-  'Format device (legal | major | admin)',
-  'Full Matrix Defense (legal | major | any)',
-  'Hash Check (illegal | major | user/admin)',
-  'Hide (illegal | major | any)',
-  'Jack Out (legal | major | any)',
-  'Jam Signals (illegal | major | admin)',
-  'Jump Into Rigged Device (legal | major | user/admin)',
-  'Matrix Perception (legal | minor | any)',
-  'Matrix Search (legal | extended 10 min | any)',
-  'Probe (illegal | extended 1 min | any)',
-  'Reboot device (legal | major | admin)',
-  'Reconfigure Matrix Attribute (legal | minor | admin)',
-  'Send Message (legal | minor | any)',
-  'Set Data Bomb (illegal | major | admin)',
-  'Snoop (illegal | major | admin)',
-  'Spoof command (illegal | major | any)',
-  'Switch Interface Mode (legal | minor | admin)',
-  'Tarpit (illegal | major | any)',
-  'Trace Icon (illegal | major | admin)',
+final List<List<String>> allActions = [
+  [
+    'Backdoor Entry (illegal | major | outsider)',
+    'Cracking + Logic vs Willpower + Firewall'
+  ],
+  [
+    'Brute Force (illegal | major | any)',
+    'Cracking + Logic vs Willpower + Firewall'
+  ],
+  ['Change Icon (legal | minor | user/admin)', ''],
+  ['Check OS (illegal | major | admin)', 'Cracking + Logic (4)'],
+  [
+    'Control Device (legal | major | user/admin)',
+    'Electronics + Logic vs Willpower + Firewall'
+  ],
+  [
+    'Crack File (illegal | major | user/admin)',
+    'Cracking + Logic vs Encryption rating * 2'
+  ],
+  [
+    'Crash Program (illegal | major | admin)',
+    'Cracking + Logic vs Data Processing + Device Rating'
+  ],
+  [
+    'Data spike (illegal | major | any)',
+    'Cracking + Logic vs Data Processing + Firewall'
+  ],
+  [
+    'Disarm data bomb (legal | major | user/admin)',
+    'Cracking + Logic vs data bomb rating * 2'
+  ],
+  [
+    'Edit file (legal | major | user/admin)',
+    'Electronics + Logic vs Intuition/Sleaze + Firewall'
+  ],
+  ['Encrypt File (legal | major | user/admin)', 'Electronics + Logic'],
+  ['Enter/exit Host (legal | minor | depends)', ''],
+  [
+    'Erase Matrix Signature (illegal | major | user/admin)',
+    'Electronics + Logic vs Willpower/Firewall + Firewall'
+  ],
+  [
+    'Format device (legal | major | admin)',
+    'Electronics + Logic vs Willpower/Firewall + Firewall'
+  ],
+  ['Full Matrix Defense (legal | major | any)', ''],
+  ['Hash Check (illegal | major | user/admin)', ' Electronics + Logic'],
+  [
+    'Hide (illegal | major | any)',
+    'Cracking + Intuition vs Intuition/Sleaze + Data Processing'
+  ],
+  [
+    'Jack Out (legal | major | any)',
+    'Electronics + Willpower vs Attack/Charisma + Data Processing'
+  ],
+  ['Jam Signals (illegal | major | admin)', 'Cracking + Logic'],
+  [
+    'Jump Into Rigged Device (legal | major | user/admin)',
+    'Electronics + Logic vs Willpower/Firewall + Firewall'
+  ],
+  [
+    'Matrix Perception (legal | minor | any)',
+    'Electronics + Intuition (vs Sleaze + Willpower)'
+  ],
+  ['Matrix Search (legal | extended 10 min | any)', 'Electronics + Intuition'],
+  [
+    'Probe (illegal | extended 1 min | any)',
+    'Cracking + Logic vs Willpower/Firewall + Firewall'
+  ],
+  [
+    'Reboot device (legal | major | admin)',
+    'Electronics + Logic vs Willpower/Firewall + Firewall'
+  ],
+  ['Reconfigure Matrix Attribute (legal | minor | admin)', ''],
+  ['Send Message (legal | minor | any)', ''],
+  [
+    'Set Data Bomb (illegal | major | admin)',
+    'Electronics + Logic vs Device Rating * 2'
+  ],
+  [
+    'Snoop (illegal | major | admin)',
+    'Cracking + Logic vs Logic/Data Processing + Firewall'
+  ],
+  [
+    'Spoof command (illegal | major | any)',
+    'Cracking + Logic vs Data Processing/Pilot + Firewall'
+  ],
+  ['Switch Interface Mode (legal | minor | admin)', ''],
+  [
+    'Tarpit (illegal | major | any)',
+    'Cracking + Logic vs Data Processing + Firewall'
+  ],
+  [
+    'Trace Icon (illegal | major | admin)',
+    'Electronics + Intuition vs Willpower + Sleaze'
+  ],
 ];
 
 String getActionDescription(String action) {

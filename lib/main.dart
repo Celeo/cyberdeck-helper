@@ -406,16 +406,18 @@ class HomePageState extends State<HomePage> {
               child: ListView.builder(
                 itemCount: allActions.length,
                 itemBuilder: (context, i) => ListTile(
-                    title: Text(allActions[i]),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ViewActionInfo(actionName: allActions[i]),
-                        ),
-                      );
-                    }),
+                  title: Text(allActions[i][0]),
+                  subtitle: Text(allActions[i][1]),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ViewActionInfo(actionName: allActions[i][0]),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],
