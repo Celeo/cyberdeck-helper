@@ -286,11 +286,13 @@ class HomePageState extends State<HomePage> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text('Cyberjack',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                          )),
+                      Text(
+                        'Cyberjack',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
+                      ),
                       Padding(
                         padding: EdgeInsets.only(top: 10.0),
                         child: Text(
@@ -310,18 +312,16 @@ class HomePageState extends State<HomePage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text('Logic',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                        )),
+                    Text(
+                      'Logic',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16.0),
+                    ),
                     Padding(
                       padding: EdgeInsets.only(top: 10.0),
                       child: Text(
                         character.logic.toString(),
-                        style: TextStyle(
-                          fontSize: 16.0,
-                        ),
+                        style: TextStyle(fontSize: 16.0),
                       ),
                     ),
                   ],
@@ -329,18 +329,18 @@ class HomePageState extends State<HomePage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text('Willpower',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                        )),
+                    Text(
+                      'Willpower',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                      ),
+                    ),
                     Padding(
                       padding: EdgeInsets.only(top: 10.0),
                       child: Text(
                         character.willpower.toString(),
-                        style: TextStyle(
-                          fontSize: 16.0,
-                        ),
+                        style: TextStyle(fontSize: 16.0),
                       ),
                     ),
                   ],
@@ -375,8 +375,10 @@ class HomePageState extends State<HomePage> {
                 ),
                 Column(
                   children: <Widget>[
-                    Text('Matrix mode',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text(
+                      'Matrix mode',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     DropdownButton<MatrixMode>(
                       value: situation.mode ?? MatrixMode.AR,
                       onChanged: (val) {
@@ -399,9 +401,10 @@ class HomePageState extends State<HomePage> {
             ),
             Divider(),
             Container(
-              child: Text('Actions',
-                  style:
-                      TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+              child: Text(
+                'Actions',
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              ),
             ),
             Expanded(
               child: ListView.builder(

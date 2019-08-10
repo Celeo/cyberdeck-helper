@@ -46,8 +46,9 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
             ]),
             TextField(
               decoration: InputDecoration(labelText: 'Enter Logic'),
-              controller:
-                  TextEditingController(text: character.logic.toString()),
+              controller: TextEditingController(
+                text: character.logic.toString(),
+              ),
               keyboardType: TextInputType.number,
               onChanged: (String val) {
                 if (val != null) {
@@ -59,8 +60,9 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
             ),
             TextField(
               decoration: InputDecoration(labelText: 'Enter Willpower'),
-              controller:
-                  TextEditingController(text: character.willpower.toString()),
+              controller: TextEditingController(
+                text: character.willpower.toString(),
+              ),
               keyboardType: TextInputType.number,
               onChanged: (String val) {
                 if (val != null) {

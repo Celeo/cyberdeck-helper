@@ -190,7 +190,7 @@ final List<List<String>> allActions = [
     'Matrix Search (legal | extended 10 min | any)',
     'Electronics + Intuition',
     "Search for publicly accessible information. The number of hits can be compared to the \textbf{Logwork Results} table."
-  ], // TODO
+  ], // TODO info on the table
   [
     'Probe (illegal | extended 1 min | any)',
     'Cracking + Logic vs Willpower/Firewall + Firewall',
