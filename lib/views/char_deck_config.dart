@@ -15,7 +15,7 @@ enum _Attribs {
   Cracking,
 }
 
-class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
+class _ViewCharGearConfigState extends State<ViewCharGearConfig> {
   static const _dropdownDefaultDeck = '- Select a deck -';
   static const _dropdownDefaultJack = '- Select a jack -';
 
@@ -25,7 +25,7 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
   final controllerElectronics = TextEditingController();
   final controllerCracking = TextEditingController();
 
-  _CharGearViewConfiguration({@required this.config});
+  _ViewCharGearConfigState({@required this.config});
 
   @override
   void initState() {
@@ -182,12 +182,12 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
   }
 }
 
-class CharGearViewConfiguration extends StatefulWidget {
+class ViewCharGearConfig extends StatefulWidget {
   final DeckConfig config;
 
-  CharGearViewConfiguration({Key key, @required this.config}) : super(key: key);
+  ViewCharGearConfig({Key key, @required this.config}) : super(key: key);
 
   @override
-  _CharGearViewConfiguration createState() =>
-      _CharGearViewConfiguration(config: this.config);
+  _ViewCharGearConfigState createState() =>
+      _ViewCharGearConfigState(config: this.config);
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cyberdeck_helper/rules.dart';
 
-class _ProgramViewConfigurationState extends State<ProgramViewConfiguration> {
+class _ViewProgramConfigState extends State<ViewProgramConfig> {
   DeckConfig config;
 
-  _ProgramViewConfigurationState({@required this.config});
+  _ViewProgramConfigState({@required this.config});
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +37,12 @@ class _ProgramViewConfigurationState extends State<ProgramViewConfiguration> {
   }
 }
 
-class ProgramViewConfiguration extends StatefulWidget {
+class ViewProgramConfig extends StatefulWidget {
   final DeckConfig config;
 
-  ProgramViewConfiguration({Key key, @required this.config}) : super(key: key);
+  ViewProgramConfig({Key key, @required this.config}) : super(key: key);
 
   @override
-  _ProgramViewConfigurationState createState() =>
-      _ProgramViewConfigurationState(config: this.config);
+  _ViewProgramConfigState createState() =>
+      _ViewProgramConfigState(config: this.config);
 }

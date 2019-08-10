@@ -1,13 +1,14 @@
-import 'dart:convert';
-
-import 'package:cyberdeck_helper/action_info.dart';
-import 'package:cyberdeck_helper/noise_info.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
-import 'package:cyberdeck_helper/program_config.dart';
+import 'package:cyberdeck_helper/views/about.dart';
+import 'package:cyberdeck_helper/views/validations.dart';
+import 'package:cyberdeck_helper/views/action_info.dart';
+import 'package:cyberdeck_helper/views/noise_info.dart';
 import 'package:cyberdeck_helper/rules.dart';
-import 'package:cyberdeck_helper/char_deck_config.dart';
+import 'package:cyberdeck_helper/views/program_config.dart';
+import 'package:cyberdeck_helper/views/char_deck_config.dart';
 
 void main() => runApp(App());
 
@@ -28,6 +29,7 @@ enum _AppBarDropdownOptions {
   CharacterGear,
   Programs,
   NoiseInfo,
+  About,
 }
 
 class HomePageState extends State<HomePage> {
@@ -177,6 +179,23 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildAttribColumn(String name, String value) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            name,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: Text(
+              value,
+              style: TextStyle(fontSize: 16.0),
+            ),
+          ),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     final asdf = getValidASDF();
@@ -185,9 +204,27 @@ class HomePageState extends State<HomePage> {
         title: Text(appName),
         backgroundColor: Colors.green,
         actions: <Widget>[
-          // TODO errors like attribute selection, too many programs, etc.
-          // TODO condition monitor
+          IconButton(
+            icon: Icon(Icons.error_outline),
+            tooltip: 'Validation',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewValidations(config: deckConfig),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.favorite_border),
+            tooltip: 'Condition Monitor',
+            onPressed: () {
+              // TODO
+            },
+          ),
           PopupMenuButton<_AppBarDropdownOptions>(
+            icon: Icon(Icons.settings),
             onSelected: (choice) async {
               if (choice == null) {
                 return;
@@ -197,7 +234,7 @@ class HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        CharGearViewConfiguration(config: deckConfig),
+                        ViewCharGearConfig(config: deckConfig),
                   ),
                 );
                 saveConfig();
@@ -205,8 +242,7 @@ class HomePageState extends State<HomePage> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ProgramViewConfiguration(config: deckConfig),
+                    builder: (context) => ViewProgramConfig(config: deckConfig),
                   ),
                 );
                 saveConfig();
@@ -215,6 +251,13 @@ class HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ViewNoiseInfo(),
+                  ),
+                );
+              } else if (choice == _AppBarDropdownOptions.About) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewAbout(),
                   ),
                 );
               }
@@ -234,6 +277,11 @@ class HomePageState extends State<HomePage> {
                   value: _AppBarDropdownOptions.NoiseInfo,
                   child: Text('Noise Info'),
                 ),
+                PopupMenuDivider(),
+                PopupMenuItem(
+                  value: _AppBarDropdownOptions.About,
+                  child: Text('About'),
+                ),
               ];
             },
           ),
@@ -247,43 +295,13 @@ class HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Cyberdeck',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10.0),
-                        child: Text(
-                          deckConfig.deck ?? 'not selected',
-                          style: TextStyle(fontSize: 14.0),
-                        ),
-                      ),
-                    ],
+                  _buildAttribColumn(
+                    'Cyberdeck',
+                    deckConfig.deck ?? 'not selected',
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Cyberjack',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10.0),
-                        child: Text(
-                          deckConfig.jack ?? 'not selected',
-                          style: TextStyle(fontSize: 14.0),
-                        ),
-                      ),
-                    ],
+                  _buildAttribColumn(
+                    'Cyberjack',
+                    deckConfig.jack ?? 'not selected',
                   ),
                 ],
               ),
@@ -292,41 +310,21 @@ class HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Logic',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16.0),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        deckConfig.logic.toString(),
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ),
-                  ],
+                _buildAttribColumn(
+                  'Logic',
+                  deckConfig.logic.toString(),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Willpower',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        deckConfig.willpower.toString(),
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ),
-                  ],
+                _buildAttribColumn(
+                  'Willpower',
+                  deckConfig.willpower.toString(),
+                ),
+                _buildAttribColumn(
+                  'Electr.',
+                  deckConfig.electronics.toString(),
+                ),
+                _buildAttribColumn(
+                  'Cracking',
+                  deckConfig.cracking.toString(),
                 ),
               ],
             ),
