@@ -201,6 +201,7 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(appName),
+        backgroundColor: Colors.green,
         actions: <Widget>[
           // TODO errors like attribute selection, too many programs, etc.
           PopupMenuButton<_AppBarDropdownOptions>(

@@ -9,7 +9,10 @@ class _ProgramViewConfigurationState extends State<ProgramViewConfiguration> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Programs')),
+      appBar: AppBar(
+        title: Text('Programs'),
+        backgroundColor: Colors.green,
+      ),
       body: ListView.builder(
         itemCount: allPrograms.length,
         itemBuilder: (context, index) => ListTile(

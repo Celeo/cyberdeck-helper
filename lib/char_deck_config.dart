@@ -18,7 +18,10 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Character & Gear')),
+      appBar: AppBar(
+        title: Text('Character & Gear'),
+        backgroundColor: Colors.green,
+      ),
       body: Container(
         child: ListView(
           padding: EdgeInsets.all(50),

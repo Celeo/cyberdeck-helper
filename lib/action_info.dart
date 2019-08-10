@@ -11,6 +11,7 @@ class ViewActionInfo extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(actionName.split('(')[0].trim()),
+        backgroundColor: Colors.green,
       ),
       body: Container(
         padding: EdgeInsets.all(50.0),
