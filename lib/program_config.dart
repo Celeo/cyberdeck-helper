@@ -16,13 +16,14 @@ class _ProgramViewConfigurationState extends State<ProgramViewConfiguration> {
       body: ListView.builder(
         itemCount: allPrograms.length,
         itemBuilder: (context, index) => ListTile(
-          title: Text(allPrograms[index]),
-          trailing: Icon(config.runningPrograms.contains(allPrograms[index])
+          title: Text(allPrograms[index][0]),
+          subtitle: Text(allPrograms[index][1]),
+          trailing: Icon(config.runningPrograms.contains(allPrograms[index][0])
               ? Icons.check
               : null),
           onTap: () {
             setState(() {
-              final name = allPrograms[index];
+              final name = allPrograms[index][0];
               if (config.runningPrograms.contains(name)) {
                 config.runningPrograms.remove(name);
               } else {
