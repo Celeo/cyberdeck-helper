@@ -1,4 +1,5 @@
 import 'package:cyberdeck_helper/action_info.dart';
+import 'package:cyberdeck_helper/noise_info.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +25,7 @@ class App extends StatelessWidget {
 enum _AppBarDropdownOptions {
   CharacterGear,
   Programs,
+  NoiseInfo,
 }
 
 class HomePageState extends State<HomePage> {
@@ -108,13 +110,34 @@ class HomePageState extends State<HomePage> {
   /// Builds and returns the ASDF attribute selection row found
   /// on the main view of the app.
   Widget buildASDFDisplayRow(List<int> asdf) {
+    final attackRating = situation.attack + situation.sleaze;
+    final defenseRating = situation.dataProcessing + situation.firewall;
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         _buildASDFSelector(ASDF.Attack, asdf),
         _buildASDFSelector(ASDF.Sleaze, asdf),
-        _buildASDFSelector(ASDF.DataProcessing, asdf),
+        _buildASDFSelector(ASDF.DataProc, asdf),
         _buildASDFSelector(ASDF.Firewall, asdf),
+        Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(bottom: 10.0),
+              child: Text('AR', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            Text(attackRating.toString()),
+          ],
+        ),
+        Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(bottom: 10.0),
+              child: Text('DR', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            Text(defenseRating.toString()),
+          ],
+        ),
       ],
     );
   }
@@ -129,7 +152,7 @@ class HomePageState extends State<HomePage> {
       case ASDF.Sleaze:
         currentValue = situation.sleaze;
         break;
-      case ASDF.DataProcessing:
+      case ASDF.DataProc:
         currentValue = situation.dataProcessing;
         break;
       case ASDF.Firewall:
@@ -152,7 +175,7 @@ class HomePageState extends State<HomePage> {
                   case ASDF.Sleaze:
                     situation.sleaze = val;
                     break;
-                  case ASDF.DataProcessing:
+                  case ASDF.DataProc:
                     situation.dataProcessing = val;
                     break;
                   case ASDF.Firewall:
@@ -203,6 +226,13 @@ class HomePageState extends State<HomePage> {
                   ),
                 );
                 saveConfig();
+              } else if (choice == _AppBarDropdownOptions.NoiseInfo) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewNoiseInfo(),
+                  ),
+                );
               }
             },
             itemBuilder: (context) {
@@ -214,6 +244,11 @@ class HomePageState extends State<HomePage> {
                 PopupMenuItem(
                   value: _AppBarDropdownOptions.Programs,
                   child: Text('Programs'),
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem(
+                  value: _AppBarDropdownOptions.NoiseInfo,
+                  child: Text('Noise Info'),
                 ),
               ];
             },

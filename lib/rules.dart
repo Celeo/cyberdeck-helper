@@ -53,7 +53,7 @@ class SituationConfig {
 enum ASDF {
   Attack,
   Sleaze,
-  DataProcessing,
+  DataProc,
   Firewall,
 }
 
