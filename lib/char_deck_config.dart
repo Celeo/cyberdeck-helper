@@ -7,16 +7,92 @@ enum _DeckOrJack {
   Jack,
 }
 
+/// Enum for the enterable fields on this view.
+enum _Attribs {
+  Logic,
+  Willpower,
+  Electronics,
+  Cracking,
+}
+
 class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
   static const _dropdownDefaultDeck = '- Select a deck -';
   static const _dropdownDefaultJack = '- Select a jack -';
 
-  CharacterConfig character;
+  DeckConfig config;
+  final controllerLogic = TextEditingController();
+  final controllerWillpower = TextEditingController();
+  final controllerElectronics = TextEditingController();
+  final controllerCracking = TextEditingController();
 
-  _CharGearViewConfiguration({@required this.character});
+  _CharGearViewConfiguration({@required this.config});
+
+  @override
+  void initState() {
+    super.initState();
+    [
+      [controllerLogic, _Attribs.Logic],
+      [controllerWillpower, _Attribs.Willpower],
+      [controllerElectronics, _Attribs.Electronics],
+      [controllerCracking, _Attribs.Cracking],
+    ].forEach((pair) {
+      final controller = pair[0] as TextEditingController;
+      final attrib = pair[1] as _Attribs;
+      controller.addListener(() {
+        if (controller.text != null && controller.text.isNotEmpty) {
+          setState(() {
+            switch (attrib) {
+              case _Attribs.Logic:
+                config.logic = int.parse(controller.text);
+                break;
+              case _Attribs.Willpower:
+                config.willpower = int.parse(controller.text);
+                break;
+              case _Attribs.Electronics:
+                config.electronics = int.parse(controller.text);
+                break;
+              case _Attribs.Cracking:
+                config.cracking = int.parse(controller.text);
+                break;
+            }
+          });
+        }
+      });
+      var text;
+      switch (attrib) {
+        case _Attribs.Logic:
+          text = config.logic.toString();
+          break;
+        case _Attribs.Willpower:
+          text = config.willpower.toString();
+          break;
+        case _Attribs.Electronics:
+          text = config.electronics.toString();
+          break;
+        case _Attribs.Cracking:
+          text = config.cracking.toString();
+          break;
+      }
+      controller.text = text;
+    });
+  }
+
+  @override
+  void dispose() {
+    controllerLogic.dispose();
+    controllerWillpower.dispose();
+    controllerElectronics.dispose();
+    controllerCracking.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // controllerLogic.text = config.logic.toString();
+    // controllerWillpower.text = config.willpower.toString();
+    // controllerElectronics.text = config.electronics.toString();
+    // controllerCracking.text = config.cracking.toString();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Character & Gear'),
@@ -27,7 +103,7 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
           padding: EdgeInsets.all(50),
           children: <Widget>[
             _buildDropDown(
-                character, _dropdownDefaultDeck, _DeckOrJack.Deck, <String>[
+                config, _dropdownDefaultDeck, _DeckOrJack.Deck, <String>[
               'Rating 1: A/S 4/3, 2 slots',
               'Rating 2: A/S 5/4, 4 slots',
               'Rating 3: A/S 6/5 6 slots',
@@ -36,7 +112,7 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
               'Rating 6: A/S 9/8, 12 slots',
             ]),
             _buildDropDown(
-                character, _dropdownDefaultJack, _DeckOrJack.Jack, <String>[
+                config, _dropdownDefaultJack, _DeckOrJack.Jack, <String>[
               'Rating 1: D/F 4/3, +1 init',
               'Rating 2: D/F 5/4, +1 init',
               'Rating 3: D/F 6/5, +1 init',
@@ -45,32 +121,24 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
               'Rating 6: D/F 9/8, +2 init',
             ]),
             TextField(
-              decoration: InputDecoration(labelText: 'Enter Logic'),
-              controller: TextEditingController(
-                text: character.logic.toString(),
-              ),
+              decoration: InputDecoration(labelText: 'Logic'),
+              controller: controllerLogic,
               keyboardType: TextInputType.number,
-              onChanged: (String val) {
-                if (val != null) {
-                  setState(() {
-                    character.logic = int.parse(val);
-                  });
-                }
-              },
             ),
             TextField(
-              decoration: InputDecoration(labelText: 'Enter Willpower'),
-              controller: TextEditingController(
-                text: character.willpower.toString(),
-              ),
+              decoration: InputDecoration(labelText: 'Willpower'),
+              controller: controllerWillpower,
               keyboardType: TextInputType.number,
-              onChanged: (String val) {
-                if (val != null) {
-                  setState(() {
-                    character.willpower = int.parse(val);
-                  });
-                }
-              },
+            ),
+            TextField(
+              decoration: InputDecoration(labelText: 'Electronics'),
+              controller: controllerElectronics,
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              decoration: InputDecoration(labelText: 'Cracking'),
+              controller: controllerCracking,
+              keyboardType: TextInputType.number,
             ),
           ],
         ),
@@ -80,13 +148,13 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
 
   /// Builds and returns a widget for selecting gear and setting the
   /// value in the app's memory.
-  Widget _buildDropDown(CharacterConfig character, String defaultSelection,
+  Widget _buildDropDown(DeckConfig config, String defaultSelection,
       _DeckOrJack key, List<String> options) {
     var val;
     if (key == _DeckOrJack.Deck) {
-      val = character.deck == null ? defaultSelection : character.deck;
+      val = config.deck == null ? defaultSelection : config.deck;
     } else {
-      val = character.jack == null ? defaultSelection : character.jack;
+      val = config.jack == null ? defaultSelection : config.jack;
     }
     final allOptions = List.from(options)..insert(0, defaultSelection);
     return DropdownButton<String>(
@@ -95,9 +163,9 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
         if (val != defaultSelection) {
           setState(() {
             if (key == _DeckOrJack.Deck) {
-              character.deck = val;
+              config.deck = val;
             } else {
-              character.jack = val;
+              config.jack = val;
             }
           });
         }
@@ -115,12 +183,11 @@ class _CharGearViewConfiguration extends State<CharGearViewConfiguration> {
 }
 
 class CharGearViewConfiguration extends StatefulWidget {
-  final CharacterConfig character;
+  final DeckConfig config;
 
-  CharGearViewConfiguration({Key key, @required this.character})
-      : super(key: key);
+  CharGearViewConfiguration({Key key, @required this.config}) : super(key: key);
 
   @override
   _CharGearViewConfiguration createState() =>
-      _CharGearViewConfiguration(character: this.character);
+      _CharGearViewConfiguration(config: this.config);
 }

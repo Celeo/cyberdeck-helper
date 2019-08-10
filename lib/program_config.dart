@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cyberdeck_helper/rules.dart';
 
 class _ProgramViewConfigurationState extends State<ProgramViewConfiguration> {
-  SituationConfig situation;
+  DeckConfig config;
 
-  _ProgramViewConfigurationState({@required this.situation});
+  _ProgramViewConfigurationState({@required this.config});
 
   @override
   Widget build(BuildContext context) {
@@ -17,16 +17,16 @@ class _ProgramViewConfigurationState extends State<ProgramViewConfiguration> {
         itemCount: allPrograms.length,
         itemBuilder: (context, index) => ListTile(
           title: Text(allPrograms[index]),
-          trailing: Icon(situation.runningPrograms.contains(allPrograms[index])
+          trailing: Icon(config.runningPrograms.contains(allPrograms[index])
               ? Icons.check
               : null),
           onTap: () {
             setState(() {
               final name = allPrograms[index];
-              if (situation.runningPrograms.contains(name)) {
-                situation.runningPrograms.remove(name);
+              if (config.runningPrograms.contains(name)) {
+                config.runningPrograms.remove(name);
               } else {
-                situation.runningPrograms.add(name);
+                config.runningPrograms.add(name);
               }
             });
           },
@@ -37,12 +37,11 @@ class _ProgramViewConfigurationState extends State<ProgramViewConfiguration> {
 }
 
 class ProgramViewConfiguration extends StatefulWidget {
-  final SituationConfig situation;
+  final DeckConfig config;
 
-  ProgramViewConfiguration({Key key, @required this.situation})
-      : super(key: key);
+  ProgramViewConfiguration({Key key, @required this.config}) : super(key: key);
 
   @override
   _ProgramViewConfigurationState createState() =>
-      _ProgramViewConfigurationState(situation: this.situation);
+      _ProgramViewConfigurationState(config: this.config);
 }

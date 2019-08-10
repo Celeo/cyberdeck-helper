@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cyberdeck_helper/action_info.dart';
 import 'package:cyberdeck_helper/noise_info.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +31,7 @@ enum _AppBarDropdownOptions {
 }
 
 class HomePageState extends State<HomePage> {
-  var character = CharacterConfig.starting();
-  var situation = SituationConfig.starting();
+  var deckConfig = DeckConfig.start();
 
   @override
   void initState() {
@@ -43,41 +44,22 @@ class HomePageState extends State<HomePage> {
   /// and populate the current state.
   void _afterInitState() async {
     final prefs = await SharedPreferences.getInstance();
-    var charConfig = CharacterConfig.starting();
-    charConfig.logic = prefs.getInt('logic') ?? 1;
-    charConfig.willpower = prefs.getInt('willpower') ?? 1;
-    charConfig.deck = prefs.getString('deck');
-    charConfig.jack = prefs.getString('jack');
-    var sitConfig = SituationConfig.starting();
-    sitConfig.runningPrograms = prefs.getStringList('programs') ?? [];
-    sitConfig.loadASDF(prefs.getStringList('asdf') ?? ['0', '0', '0', '0']);
+    final json = prefs.getString('config');
+    if (json == null) {
+      return;
+    }
+    final map = jsonDecode(json);
+    final config = DeckConfig.fromJson(map);
     setState(() {
-      character = charConfig;
-      situation = sitConfig;
+      deckConfig = config;
     });
   }
 
-  /// Save the current character/gear and situation classes
-  /// to the device. This only saves the config options that
-  /// are intended to be persisted - things like AR mode and
-  /// noise are not intended to be saved.
+  /// Save the current configuration to the device.
   void saveConfig() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt('logic', character.logic);
-    prefs.setInt('willpower', character.willpower);
-    prefs.setString('deck', character.deck);
-    prefs.setString('jack', character.jack);
-    prefs.setStringList('programs', situation.runningPrograms);
-    prefs.setInt('attack', situation.attack);
-    prefs.setStringList(
-      'asdf',
-      [
-        situation.attack,
-        situation.sleaze,
-        situation.dataProcessing,
-        situation.firewall
-      ].map((e) => e.toString()).toList(),
-    );
+    final json = jsonEncode(deckConfig);
+    prefs.setString('config', json);
   }
 
   /// Returns a list of ints that are valid ASDF attributes
@@ -86,8 +68,8 @@ class HomePageState extends State<HomePage> {
   /// always returned.
   List<int> getValidASDF() {
     Set<int> values = Set.from([0]);
-    if (character.deck != null) {
-      final parts = character.deck
+    if (deckConfig.deck != null) {
+      final parts = deckConfig.deck
           .split(': ')[1]
           .split(' ')[1]
           .replaceFirst(',', '')
@@ -95,8 +77,8 @@ class HomePageState extends State<HomePage> {
       values.add(int.parse(parts[0]));
       values.add(int.parse(parts[1]));
     }
-    if (character.jack != null) {
-      final parts = character.jack
+    if (deckConfig.jack != null) {
+      final parts = deckConfig.jack
           .split(': ')[1]
           .split(' ')[1]
           .replaceFirst(',', '')
@@ -110,8 +92,8 @@ class HomePageState extends State<HomePage> {
   /// Builds and returns the ASDF attribute selection row found
   /// on the main view of the app.
   Widget buildASDFDisplayRow(List<int> asdf) {
-    final attackRating = situation.attack + situation.sleaze;
-    final defenseRating = situation.dataProcessing + situation.firewall;
+    final attackRating = deckConfig.attack + deckConfig.sleaze;
+    final defenseRating = deckConfig.dataProcessing + deckConfig.firewall;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -147,16 +129,16 @@ class HomePageState extends State<HomePage> {
     var currentValue;
     switch (attribute) {
       case ASDF.Attack:
-        currentValue = situation.attack;
+        currentValue = deckConfig.attack;
         break;
       case ASDF.Sleaze:
-        currentValue = situation.sleaze;
+        currentValue = deckConfig.sleaze;
         break;
       case ASDF.DataProc:
-        currentValue = situation.dataProcessing;
+        currentValue = deckConfig.dataProcessing;
         break;
       case ASDF.Firewall:
-        currentValue = situation.firewall;
+        currentValue = deckConfig.firewall;
         break;
     }
     return Column(
@@ -170,16 +152,16 @@ class HomePageState extends State<HomePage> {
               setState(() {
                 switch (attribute) {
                   case ASDF.Attack:
-                    situation.attack = val;
+                    deckConfig.attack = val;
                     break;
                   case ASDF.Sleaze:
-                    situation.sleaze = val;
+                    deckConfig.sleaze = val;
                     break;
                   case ASDF.DataProc:
-                    situation.dataProcessing = val;
+                    deckConfig.dataProcessing = val;
                     break;
                   case ASDF.Firewall:
-                    situation.firewall = val;
+                    deckConfig.firewall = val;
                     break;
                 }
               });
@@ -204,6 +186,7 @@ class HomePageState extends State<HomePage> {
         backgroundColor: Colors.green,
         actions: <Widget>[
           // TODO errors like attribute selection, too many programs, etc.
+          // TODO condition monitor
           PopupMenuButton<_AppBarDropdownOptions>(
             onSelected: (choice) async {
               if (choice == null) {
@@ -214,7 +197,7 @@ class HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        CharGearViewConfiguration(character: character),
+                        CharGearViewConfiguration(config: deckConfig),
                   ),
                 );
                 saveConfig();
@@ -223,7 +206,7 @@ class HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        ProgramViewConfiguration(situation: situation),
+                        ProgramViewConfiguration(config: deckConfig),
                   ),
                 );
                 saveConfig();
@@ -277,7 +260,7 @@ class HomePageState extends State<HomePage> {
                       Padding(
                         padding: EdgeInsets.only(top: 10.0),
                         child: Text(
-                          character.deck ?? 'not selected',
+                          deckConfig.deck ?? 'not selected',
                           style: TextStyle(fontSize: 14.0),
                         ),
                       ),
@@ -296,7 +279,7 @@ class HomePageState extends State<HomePage> {
                       Padding(
                         padding: EdgeInsets.only(top: 10.0),
                         child: Text(
-                          character.jack ?? 'not selected',
+                          deckConfig.jack ?? 'not selected',
                           style: TextStyle(fontSize: 14.0),
                         ),
                       ),
@@ -320,7 +303,7 @@ class HomePageState extends State<HomePage> {
                     Padding(
                       padding: EdgeInsets.only(top: 10.0),
                       child: Text(
-                        character.logic.toString(),
+                        deckConfig.logic.toString(),
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ),
@@ -339,7 +322,7 @@ class HomePageState extends State<HomePage> {
                     Padding(
                       padding: EdgeInsets.only(top: 10.0),
                       child: Text(
-                        character.willpower.toString(),
+                        deckConfig.willpower.toString(),
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ),
@@ -360,12 +343,12 @@ class HomePageState extends State<HomePage> {
                       child: TextField(
                         decoration: InputDecoration(labelText: 'Noise'),
                         controller: TextEditingController(
-                            text: situation.noise.toString() ?? '0'),
+                            text: deckConfig.noise.toString() ?? '0'),
                         keyboardType: TextInputType.number,
                         onChanged: (val) {
                           if (val != null) {
                             setState(() {
-                              situation.noise = int.parse(val);
+                              deckConfig.noise = int.parse(val);
                             });
                           }
                         },
@@ -380,11 +363,11 @@ class HomePageState extends State<HomePage> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     DropdownButton<MatrixMode>(
-                      value: situation.mode ?? MatrixMode.AR,
+                      value: deckConfig.mode ?? MatrixMode.AR,
                       onChanged: (val) {
                         if (val != null) {
                           setState(() {
-                            situation.mode = val;
+                            deckConfig.mode = val;
                           });
                         }
                       },

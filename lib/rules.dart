@@ -4,22 +4,15 @@ enum MatrixMode {
   Hot,
 }
 
-class CharacterConfig {
-  int logic, willpower;
+class DeckConfig {
+  int logic;
+  int willpower;
+  int cracking;
+  int electronics;
+
   String deck;
   String jack;
 
-  CharacterConfig(int logic, int willpower, String deck, String jack);
-
-  CharacterConfig.starting() {
-    logic = 1;
-    willpower = 1;
-    deck = null;
-    jack = null;
-  }
-}
-
-class SituationConfig {
   int attack;
   int sleaze;
   int dataProcessing;
@@ -28,10 +21,29 @@ class SituationConfig {
   MatrixMode mode;
   List<String> runningPrograms;
 
-  SituationConfig(int attack, int sleaze, int dataProcessing, int firewall,
-      int noise, MatrixMode mode, List<String> runningPrograms);
+  DeckConfig(
+    this.logic,
+    this.willpower,
+    this.cracking,
+    this.electronics,
+    this.deck,
+    this.jack,
+    this.attack,
+    this.sleaze,
+    this.dataProcessing,
+    this.firewall,
+    this.noise,
+    this.mode,
+    this.runningPrograms,
+  );
 
-  SituationConfig.starting() {
+  DeckConfig.start() {
+    logic = 0;
+    willpower = 0;
+    cracking = 0;
+    electronics = 0;
+    deck = null;
+    jack = null;
     attack = 0;
     sleaze = 0;
     dataProcessing = 0;
@@ -41,13 +53,34 @@ class SituationConfig {
     runningPrograms = [];
   }
 
-  void loadASDF(List<String> values) {
-    final converted = values.map((e) => int.parse(e)).toList();
-    attack = converted[0];
-    sleaze = converted[1];
-    dataProcessing = converted[2];
-    firewall = converted[3];
-  }
+  DeckConfig.fromJson(Map<String, dynamic> json)
+      : logic = json['logic'],
+        willpower = json['willpower'],
+        cracking = json['cracking'],
+        electronics = json['electronics'],
+        deck = json['deck'],
+        jack = json['jack'],
+        attack = json['attack'],
+        sleaze = json['sleaze'],
+        dataProcessing = json['dataProcessing'],
+        firewall = json['firewall'],
+        noise = 0,
+        mode = MatrixMode.AR,
+        runningPrograms = json['runningPrograms'].cast<String>();
+
+  Map<String, dynamic> toJson() => {
+        'logic': logic,
+        'willpower': willpower,
+        'cracking': cracking,
+        'electronics': electronics,
+        'deck': deck,
+        'jack': jack,
+        'attack': attack,
+        'sleaze': sleaze,
+        'dataProcessing': dataProcessing,
+        'firewall': firewall,
+        'runningPrograms': runningPrograms
+      };
 }
 
 enum ASDF {
@@ -57,6 +90,7 @@ enum ASDF {
   Firewall,
 }
 
+// TODO program subtitles
 final List<String> allPrograms = [
   'Baby Monitor',
   'Browse',
