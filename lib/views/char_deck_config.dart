@@ -100,8 +100,15 @@ class _ViewCharGearConfigState extends State<ViewCharGearConfig> {
       ),
       body: Container(
         child: ListView(
-          padding: EdgeInsets.all(50),
+          padding: EdgeInsets.only(left: 50.0, right: 50.0),
           children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 30.0, bottom: 15.0),
+              child: Text(
+                'Configure Character',
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              ),
+            ),
             _buildDropDown(
                 config, _dropdownDefaultDeck, _DeckOrJack.Deck, <String>[
               'Rating 1: A/S 4/3, 2 slots',
