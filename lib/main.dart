@@ -1,3 +1,4 @@
+import 'package:cyberdeck_helper/views/condition_monitor.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -211,7 +212,9 @@ class HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ViewValidations(config: deckConfig),
+                  builder: (context) => ViewValidations(
+                    config: deckConfig,
+                  ),
                 ),
               );
             },
@@ -219,8 +222,16 @@ class HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.favorite_border),
             tooltip: 'Condition Monitor',
-            onPressed: () {
-              // TODO
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewConditionMonitor(
+                    config: deckConfig,
+                  ),
+                ),
+              );
+              saveConfig();
             },
           ),
           PopupMenuButton<_AppBarDropdownOptions>(
@@ -233,8 +244,9 @@ class HomePageState extends State<HomePage> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ViewCharGearConfig(config: deckConfig),
+                    builder: (context) => ViewCharGearConfig(
+                      config: deckConfig,
+                    ),
                   ),
                 );
                 saveConfig();
@@ -242,7 +254,9 @@ class HomePageState extends State<HomePage> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ViewProgramConfig(config: deckConfig),
+                    builder: (context) => ViewProgramConfig(
+                      config: deckConfig,
+                    ),
                   ),
                 );
                 saveConfig();

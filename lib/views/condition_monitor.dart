@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:cyberdeck_helper/rules.dart';
 
 class ViewConditionMonitor extends StatelessWidget {
+  final DeckConfig config;
+
+  ViewConditionMonitor({@required this.config});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
