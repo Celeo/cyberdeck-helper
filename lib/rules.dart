@@ -20,6 +20,7 @@ class DeckConfig {
   int noise;
   MatrixMode mode;
   List<String> runningPrograms;
+  int conditionMonitor;
 
   DeckConfig(
     this.logic,
@@ -35,6 +36,7 @@ class DeckConfig {
     this.noise,
     this.mode,
     this.runningPrograms,
+    this.conditionMonitor,
   );
 
   DeckConfig.start() {
@@ -51,22 +53,24 @@ class DeckConfig {
     noise = 0;
     mode = MatrixMode.AR;
     runningPrograms = [];
+    conditionMonitor = 0;
   }
 
   DeckConfig.fromJson(Map<String, dynamic> json)
-      : logic = json['logic'],
-        willpower = json['willpower'],
-        cracking = json['cracking'],
-        electronics = json['electronics'],
-        deck = json['deck'],
-        jack = json['jack'],
-        attack = json['attack'],
-        sleaze = json['sleaze'],
-        dataProcessing = json['dataProcessing'],
-        firewall = json['firewall'],
+      : logic = json['logic'] ?? 0,
+        willpower = json['willpower'] ?? 0,
+        cracking = json['cracking'] ?? 0,
+        electronics = json['electronics'] ?? 0,
+        deck = json['deck'] ?? null,
+        jack = json['jack'] ?? null,
+        attack = json['attack'] ?? 0,
+        sleaze = json['sleaze'] ?? 0,
+        dataProcessing = json['dataProcessing'] ?? 0,
+        firewall = json['firewall'] ?? 0,
         noise = 0,
         mode = MatrixMode.AR,
-        runningPrograms = json['runningPrograms'].cast<String>();
+        runningPrograms = json['runningPrograms'].cast<String>() ?? [],
+        conditionMonitor = json['conditionMonitor'] ?? 0;
 
   Map<String, dynamic> toJson() => {
         'logic': logic,
@@ -79,7 +83,8 @@ class DeckConfig {
         'sleaze': sleaze,
         'dataProcessing': dataProcessing,
         'firewall': firewall,
-        'runningPrograms': runningPrograms
+        'runningPrograms': runningPrograms,
+        'conditionMonitor': conditionMonitor,
       };
 }
 
@@ -89,6 +94,24 @@ enum ASDF {
   DataProc,
   Firewall,
 }
+
+final List<String> cyberdecks = [
+  'Rating 1: A/S 4/3, 2 slots',
+  'Rating 2: A/S 5/4, 4 slots',
+  'Rating 3: A/S 6/5 6 slots',
+  'Rating 4: A/S 7/6, 8 slots',
+  'Rating 5: A/S 8/7, 10 slots',
+  'Rating 6: A/S 9/8, 12 slots',
+];
+
+final List<String> cyberjacks = [
+  'Rating 1: D/F 4/3, +1 init',
+  'Rating 2: D/F 5/4, +1 init',
+  'Rating 3: D/F 6/5, +1 init',
+  'Rating 4: D/F 7/6, +2 init',
+  'Rating 5: D/F 8/7, +2 init',
+  'Rating 6: D/F 9/8, +2 init',
+];
 
 final List<List<String>> allPrograms = [
   ['Baby Monitor', 'Show current OS without test'],
@@ -108,7 +131,7 @@ final List<List<String>> allPrograms = [
   ['Exploit', 'Target DR -2'],
   ['Fork', 'Hit 2 targets w/ actions w/o splitting pool'],
   ['Lockdown', 'Cause link-locked when attacking'],
-  ['Overclock', '+1 diee, +1 wild die for all tests'],
+  ['Overclock', '+1 die & +1 wild die for all tests'],
   ['Stealth', '(Sleaze) Gain 1 temp. edge for Hide'],
   ['Trace', '(Sleaze) Gain 1 temp. edge for Trace Icon'],
 ];

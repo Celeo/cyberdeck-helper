@@ -110,23 +110,17 @@ class _ViewCharGearConfigState extends State<ViewCharGearConfig> {
               ),
             ),
             _buildDropDown(
-                config, _dropdownDefaultDeck, _DeckOrJack.Deck, <String>[
-              'Rating 1: A/S 4/3, 2 slots',
-              'Rating 2: A/S 5/4, 4 slots',
-              'Rating 3: A/S 6/5 6 slots',
-              'Rating 4: A/S 7/6, 8 slots',
-              'Rating 5: A/S 8/7, 10 slots',
-              'Rating 6: A/S 9/8, 12 slots',
-            ]),
+              config,
+              _dropdownDefaultDeck,
+              _DeckOrJack.Deck,
+              cyberdecks,
+            ),
             _buildDropDown(
-                config, _dropdownDefaultJack, _DeckOrJack.Jack, <String>[
-              'Rating 1: D/F 4/3, +1 init',
-              'Rating 2: D/F 5/4, +1 init',
-              'Rating 3: D/F 6/5, +1 init',
-              'Rating 4: D/F 7/6, +2 init',
-              'Rating 5: D/F 8/7, +2 init',
-              'Rating 6: D/F 9/8, +2 init',
-            ]),
+              config,
+              _dropdownDefaultJack,
+              _DeckOrJack.Jack,
+              cyberjacks,
+            ),
             TextField(
               decoration: InputDecoration(labelText: 'Logic'),
               controller: controllerLogic,
