@@ -35,10 +35,9 @@ class _ViewConditionMonitorState extends State<ViewConditionMonitor> {
         child: Row(
           children: <Widget>[
             Icon(
-              config.conditionMonitor > index
-                  ? Icons.favorite
-                  : Icons.favorite_border,
-              color: Colors.red,
+              config.conditionMonitor > index ? Icons.warning : Icons.done,
+              color:
+                  config.conditionMonitor > index ? Colors.red : Colors.green,
             ),
             Padding(
               padding: EdgeInsets.only(left: 15.0),
@@ -63,22 +62,39 @@ class _ViewConditionMonitorState extends State<ViewConditionMonitor> {
         : 0;
     final maxBoxes = (rating / 2).ceil() + 8;
     debugPrint('Max boxes is $maxBoxes; that is ${(maxBoxes / 3).ceil()} rows');
+    final rows = new List<int>.generate((maxBoxes / 3).ceil(), (i) => i)
+        .map((i) => _row(maxBoxes, i * 3 + 1))
+        .toList();
     return Scaffold(
       appBar: AppBar(
         title: Text('Condition Monitor'),
         backgroundColor: Colors.green,
       ),
       body: Padding(
-        padding: EdgeInsets.only(top: 50.0, right: 20.0, left: 20.0),
+        padding: EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
         child: Column(
-          /*
-            Need a number of rows equal to (maxBoxes / 3).ceil()
-            Each row has up to 3 boxes, capping out at maxBoxes
-            Each row needs to start at i, and go to i + 3, which is where the next row starts
-          */
-          children: new List<int>.generate((maxBoxes / 3).ceil(), (i) => i)
-              .map((i) => _row(maxBoxes, i * 3 + 1))
-              .toList(),
+          children: new List.from([
+            RaisedButton(
+              child: Container(
+                decoration: BoxDecoration(color: Colors.green),
+                child: Text(
+                  'Clear all damage',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    color: Colors.white,
+                  ),
+                ),
+                padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+              ),
+              padding: EdgeInsets.all(0.0),
+              onPressed: () {
+                setState(() {
+                  config.conditionMonitor = 0;
+                });
+              },
+            ),
+          ])
+            ..addAll(rows),
         ),
       ),
     );
