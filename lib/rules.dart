@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 enum MatrixMode {
   AR,
   Cold,
@@ -299,6 +301,66 @@ final List<List<String>> allActions = [
   ],
 ];
 
-String getActionDescription(String action) {
+String getActionDescription(final String action) {
   return allActions.firstWhere((e) => e[0] == action)[2];
+}
+
+/// Returns a list of ints that are valid ASDF attributes
+/// for the current cyberdeck and cyberjack selection. In
+/// addition to the results from the gear, the value '0' is
+/// always returned.
+List<int> getValidASDF(final DeckConfig config) {
+  List<int> values = [];
+  if (config.deck != null) {
+    final parts = config.deck
+        .split(': ')[1]
+        .split(' ')[1]
+        .replaceFirst(',', '')
+        .split('/');
+    values.add(int.parse(parts[0]));
+    values.add(int.parse(parts[1]));
+  }
+  if (config.jack != null) {
+    final parts = config.jack
+        .split(': ')[1]
+        .split(' ')[1]
+        .replaceFirst(',', '')
+        .split('/');
+    values.add(int.parse(parts[0]));
+    values.add(int.parse(parts[1]));
+  }
+  values.sort();
+  return values;
+}
+
+List<int> getValidASDFSorted(final DeckConfig config) {
+  final raw = getValidASDF(config);
+  final dedup = new Set.from(raw);
+  dedup.add(0);
+  return new List.from(dedup);
+}
+
+List<String> validateConfig(final DeckConfig config) {
+  final programsMaxAllowed =
+      config.deck == null ? 0 : int.parse(config.deck.split(' ')[4]);
+  final programsUsed = config.runningPrograms.length;
+  final validASDF = getValidASDF(config);
+  final currentASDF = [
+    config.attack,
+    config.sleaze,
+    config.dataProcessing,
+    config.firewall,
+  ];
+  currentASDF.sort();
+
+  List<String> errors = [];
+  if (programsUsed > programsMaxAllowed) {
+    errors.add('Max programs allowed is $programsMaxAllowed, you '
+        'have $programsUsed slotted');
+  }
+  if (!ListEquality().equals(validASDF, currentASDF)) {
+    errors.add('Invalid ASDF configuration. Valid: ${validASDF.toString()}, '
+        'current: ${currentASDF.toString()}');
+  }
+  return errors;
 }

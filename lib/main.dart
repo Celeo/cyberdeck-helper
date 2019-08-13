@@ -1,15 +1,15 @@
-import 'package:cyberdeck_helper/views/condition_monitor.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'package:cyberdeck_helper/views/about.dart';
+import 'package:cyberdeck_helper/views/condition_monitor.dart';
 import 'package:cyberdeck_helper/views/validations.dart';
 import 'package:cyberdeck_helper/views/action_info.dart';
 import 'package:cyberdeck_helper/views/noise_info.dart';
-import 'package:cyberdeck_helper/rules.dart';
 import 'package:cyberdeck_helper/views/program_config.dart';
 import 'package:cyberdeck_helper/views/char_deck_config.dart';
+import 'package:cyberdeck_helper/rules.dart';
 
 void main() => runApp(App());
 
@@ -63,33 +63,6 @@ class HomePageState extends State<HomePage> {
     final prefs = await SharedPreferences.getInstance();
     final json = jsonEncode(deckConfig);
     prefs.setString('config', json);
-  }
-
-  /// Returns a list of ints that are valid ASDF attributes
-  /// for the current cyberdeck and cyberjack selection. In
-  /// addition to the results from the gear, the value '0' is
-  /// always returned.
-  List<int> getValidASDF() {
-    Set<int> values = Set.from([0]);
-    if (deckConfig.deck != null) {
-      final parts = deckConfig.deck
-          .split(': ')[1]
-          .split(' ')[1]
-          .replaceFirst(',', '')
-          .split('/');
-      values.add(int.parse(parts[0]));
-      values.add(int.parse(parts[1]));
-    }
-    if (deckConfig.jack != null) {
-      final parts = deckConfig.jack
-          .split(': ')[1]
-          .split(' ')[1]
-          .replaceFirst(',', '')
-          .split('/');
-      values.add(int.parse(parts[0]));
-      values.add(int.parse(parts[1]));
-    }
-    return List.from(values)..sort();
   }
 
   /// Builds and returns the ASDF attribute selection row found
@@ -199,15 +172,97 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final asdf = getValidASDF();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(appName),
-        backgroundColor: Colors.green,
-        actions: <Widget>[
+    final asdf = getValidASDFSorted(deckConfig);
+    final errors = validateConfig(deckConfig);
+    var appBarChildren = [
+      IconButton(
+        icon: Icon(Icons.favorite_border),
+        tooltip: 'Condition Monitor',
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ViewConditionMonitor(
+                config: deckConfig,
+              ),
+            ),
+          );
+          saveConfig();
+        },
+      ),
+      PopupMenuButton<_AppBarDropdownOptions>(
+        icon: Icon(Icons.settings),
+        onSelected: (choice) async {
+          if (choice == null) {
+            return;
+          }
+          if (choice == _AppBarDropdownOptions.CharacterGear) {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewCharGearConfig(
+                  config: deckConfig,
+                ),
+              ),
+            );
+            saveConfig();
+          } else if (choice == _AppBarDropdownOptions.Programs) {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewProgramConfig(
+                  config: deckConfig,
+                ),
+              ),
+            );
+            saveConfig();
+          } else if (choice == _AppBarDropdownOptions.NoiseInfo) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewNoiseInfo(),
+              ),
+            );
+          } else if (choice == _AppBarDropdownOptions.About) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewAbout(),
+              ),
+            );
+          }
+        },
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              value: _AppBarDropdownOptions.CharacterGear,
+              child: Text('Character/Gear'),
+            ),
+            PopupMenuItem(
+              value: _AppBarDropdownOptions.Programs,
+              child: Text('Programs'),
+            ),
+            PopupMenuDivider(),
+            PopupMenuItem(
+              value: _AppBarDropdownOptions.NoiseInfo,
+              child: Text('Noise Info'),
+            ),
+            PopupMenuDivider(),
+            PopupMenuItem(
+              value: _AppBarDropdownOptions.About,
+              child: Text('About'),
+            ),
+          ];
+        },
+      ),
+    ];
+    if (errors.length > 0) {
+      appBarChildren.insert(
+          0,
           IconButton(
             icon: Icon(Icons.error_outline),
-            tooltip: 'Validation',
+            color: Colors.red,
+            tooltip: 'Errors',
             onPressed: () {
               Navigator.push(
                 context,
@@ -218,88 +273,13 @@ class HomePageState extends State<HomePage> {
                 ),
               );
             },
-          ),
-          IconButton(
-            icon: Icon(Icons.favorite_border),
-            tooltip: 'Condition Monitor',
-            onPressed: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ViewConditionMonitor(
-                    config: deckConfig,
-                  ),
-                ),
-              );
-              saveConfig();
-            },
-          ),
-          PopupMenuButton<_AppBarDropdownOptions>(
-            icon: Icon(Icons.settings),
-            onSelected: (choice) async {
-              if (choice == null) {
-                return;
-              }
-              if (choice == _AppBarDropdownOptions.CharacterGear) {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewCharGearConfig(
-                      config: deckConfig,
-                    ),
-                  ),
-                );
-                saveConfig();
-              } else if (choice == _AppBarDropdownOptions.Programs) {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewProgramConfig(
-                      config: deckConfig,
-                    ),
-                  ),
-                );
-                saveConfig();
-              } else if (choice == _AppBarDropdownOptions.NoiseInfo) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewNoiseInfo(),
-                  ),
-                );
-              } else if (choice == _AppBarDropdownOptions.About) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewAbout(),
-                  ),
-                );
-              }
-            },
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                  value: _AppBarDropdownOptions.CharacterGear,
-                  child: Text('Character/Gear'),
-                ),
-                PopupMenuItem(
-                  value: _AppBarDropdownOptions.Programs,
-                  child: Text('Programs'),
-                ),
-                PopupMenuDivider(),
-                PopupMenuItem(
-                  value: _AppBarDropdownOptions.NoiseInfo,
-                  child: Text('Noise Info'),
-                ),
-                PopupMenuDivider(),
-                PopupMenuItem(
-                  value: _AppBarDropdownOptions.About,
-                  child: Text('About'),
-                ),
-              ];
-            },
-          ),
-        ],
+          ));
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(appName),
+        backgroundColor: Colors.green,
+        actions: appBarChildren,
       ),
       body: Center(
         child: Column(

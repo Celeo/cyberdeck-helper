@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:cyberdeck_helper/rules.dart';
 
 class ViewValidations extends StatelessWidget {
@@ -8,6 +9,13 @@ class ViewValidations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final errors = validateConfig(config);
+    final noErrorsText = Center(
+      child: Text(
+        'No errors',
+        style: TextStyle(fontSize: 30.0),
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text('Validations'),
@@ -16,12 +24,14 @@ class ViewValidations extends StatelessWidget {
       body: Container(
         padding: EdgeInsets.all(40.0),
         child: Column(
-          children: <Widget>[
-            Text(
-              'TODO',
-              style: TextStyle(fontSize: 16.0),
-            ),
-          ],
+          children: errors.length == 0
+              ? [noErrorsText]
+              : errors
+                  .map(
+                    (e) => Text(e,
+                        style: TextStyle(color: Colors.red, fontSize: 18.0)),
+                  )
+                  .toList(),
         ),
       ),
     );
